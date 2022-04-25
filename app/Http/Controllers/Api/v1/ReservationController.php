@@ -20,6 +20,24 @@ use Illuminate\Support\Str;
 
 class ReservationController extends Controller
 {
+
+    public function test(){
+            //TODO: Send a verification email
+            $details = [
+                'name' => 'name',
+                'reservation_date' => 'test',
+                'reservation_time' => '13:11',
+                'number_of_people' => '3',
+                'phone_number' => '00000000000',
+                'token' => 'asdnasodasda12312312',
+                'order_number' => '123asdasdasdasd',
+                'cancel_key' => 'asdhasoud1d812do',
+                'message' => 'Lasmdčasklbdviazguhijokdpdjnqbkvjahbjdhjnas dbaskc askbd asjl sd kajbdasklbhkdasklbd asdblasdjlhljhljhasnmd,sadnas,dnmadashdalsjdnmasdbkhauhiuguobhkn mnkjčhbvb njkhbh nkjhbh nkmjnbh nmk'
+            ];
+
+            Mail::to('test@email.com')->send(new SuccessfulReservationMail($details));
+            return 'done';
+    }
     public function index()
     {
         $reservations = Reservation::all();
@@ -171,7 +189,6 @@ class ReservationController extends Controller
                 'number_of_people' => $request->number_of_people,
                 'phone_number' => $request->phone_number,
                 'token' => $token,
-                'order_number' => $order_number,
             ];
             $email = $request->email;
 
@@ -204,6 +221,7 @@ class ReservationController extends Controller
 
         $details = [
             'name' => $confirmedReservation->name,
+            'order_number' => $confirmedReservation->order_number,
             'reservation_date' => $confirmedReservation->reservation_date,
             'reservation_time' => $confirmedReservation->reservation_time,
             'number_of_people' => $confirmedReservation->number_of_people,

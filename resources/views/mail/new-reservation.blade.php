@@ -35,6 +35,14 @@
         </tr>
         <tr>
             <td>
+                Broj osoba:
+            </td>
+            <td>
+                {{$details['number_of_people']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
                 Poruka:
             </td>
             <td>

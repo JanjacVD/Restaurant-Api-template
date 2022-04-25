@@ -65,6 +65,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('/gallery', [GalleryController::class, 'index'])
         ->name('public.gallery');
 
+    //TODO: GALLERY CONTROLLERS; LOCALIZATION
+
 });
 
 //Admin panel routes

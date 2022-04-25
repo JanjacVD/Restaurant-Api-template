@@ -17,7 +17,3 @@ use App\Http\Controllers\Api\v1\ReservationController;
 Route::get('/', function () {
     return redirect(env('FRONTEND_URL'));
 });
-
-
-Route::get('/reservation-make', [ReservationController::class, 'confirmReservation'])
-->name('reservation.confirm');
