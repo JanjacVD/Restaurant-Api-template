@@ -1,0 +1,37 @@
+<body>
+    <h1>Nova poruka</h1>
+    <table>
+        <tr>
+            <td>
+                Ime:
+            </td>
+            <td>
+                {{$details['name']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Predmet:
+            </td>
+            <td>
+                {{$details['subject']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Šalje:
+            </td>
+            <td>
+                {{$details['email']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Poruka:
+            </td>
+            <td>
+                {{$details['message']}}
+            </td>
+        </tr>
+    </table>
+</body>
