@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\ReservationController;
+use Illuminate\Support\Facades\Config;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +16,5 @@ use App\Http\Controllers\Api\v1\ReservationController;
 */
 
 Route::get('/', function () {
-    return redirect(env('FRONTEND_URL'));
+    return redirect()->to(Config::get('values.frontend_url'));
 });

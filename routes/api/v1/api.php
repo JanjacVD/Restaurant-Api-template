@@ -36,7 +36,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 //General routes
-Route::group(['prefix' => 'v1'], function () {
+Route::group(['prefix' => 'v1', 'middleware' => 'guest'], function () {
 
     Route::post('/contact', [ContactController::class, 'send'])
         ->name('send-mail');

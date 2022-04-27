@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Config;
 
 class SendConfirmationMail extends Mailable
 {
@@ -30,7 +31,7 @@ class SendConfirmationMail extends Mailable
     public function build()
     {
         return $this->subject('Reservation')
-        ->from(env('RESERVATION_MAIL'), env('APP_NAME'))
+        ->from(Config::get('values.reservation_mail'), env('APP_NAME'))
         ->view('mail.pending-reservation');
     }
 }

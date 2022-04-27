@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamps();
             $table->integer('day_from');
             $table->integer('day_to');
-            $table->time('time_from');
-            $table->time('time_to');
+            $table->string('time_from');
+            $table->string('time_to');
             $table->boolean('is_open');
         });
     }

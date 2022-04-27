@@ -15,28 +15,33 @@ use App\Mail\NewReservationMail;
 use App\Mail\CanceledReservationMail;
 use App\Mail\SuccessfulReservationMail;
 use App\Models\Api\v1\ReservationCapacity;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class ReservationController extends Controller
 {
 
-    public function test(){
-            //TODO: Send a verification email
-            $details = [
-                'name' => 'name',
-                'reservation_date' => 'test',
-                'reservation_time' => '13:11',
-                'number_of_people' => '3',
-                'phone_number' => '00000000000',
-                'token' => 'asdnasodasda12312312',
-                'order_number' => '123asdasdasdasd',
-                'cancel_key' => 'asdhasoud1d812do',
-                'message' => 'Lasmdčasklbdviazguhijokdpdjnqbkvjahbjdhjnas dbaskc askbd asjl sd kajbdasklbhkdasklbd asdblasdjlhljhljhasnmd,sadnas,dnmadashdalsjdnmasdbkhauhiuguobhkn mnkjčhbvb njkhbh nkjhbh nkmjnbh nmk'
-            ];
+    public function test()
+    {
+        //TODO: Send a verification email
+        $details = [
+            'name' => 'name',
+            'reservation_date' => 'test',
+            'reservation_time' => '13:11',
+            'number_of_people' => '3',
+            'phone_number' => '00000000000',
+            'token' => 'asdnasodasda12312312',
+            'order_number' => '123asdasdasdasd',
+            'cancel_key' => 'asdhasoud1d812do',
+            'message' => 'Lasmdčasklbdviazguhijokdpdjnqbkvjahbjdhjnas dbaskc askbd asjl sd kajbdasklbhkdasklbd asdblasdjlhljhljhasnmd,sadnas,dnmadashdalsjdnmasdbkhauhiuguobhkn mnkjčhbvb njkhbh nkjhbh nkmjnbh nmk'
+        ];
 
-            Mail::to('test@email.com')->send(new SuccessfulReservationMail($details));
-            return 'done';
+        if (Mail::to('test@email.com')->send(new SuccessfulReservationMail($details))) {
+        } else {
+            return response()->json(['Status' => 'Failed to send email'], 400);
+        }
+        return 'done';
     }
     public function index()
     {
@@ -192,7 +197,10 @@ class ReservationController extends Controller
             ];
             $email = $request->email;
 
-            Mail::to($email)->send(new SendConfirmationMail($details));
+            if (Mail::to($email)->send(new SendConfirmationMail($details))) {
+            } else {
+                return response()->json(['Status' => 'Failed to send email'], 400);
+            }
 
             return response()->json(['Status' => 'Verification email sent', 'token' => $token], 201);
         }
@@ -204,7 +212,7 @@ class ReservationController extends Controller
         $token = $request->token;
         $message = $request->message;
         $confirmedReservation = Reservation::where(['token' => $token, 'confirmed' => false])->first();
-        if($confirmedReservation === null){
+        if ($confirmedReservation === null) {
             return response()->json(["Status" => "Reservation has already been confirmed"], 410);
         }
         $max = ReservationCapacity::first()->daily_capacity;
@@ -231,8 +239,15 @@ class ReservationController extends Controller
             'message' => $message
         ];
         $email = $confirmedReservation->email;
-        Mail::to($email)->send(new SuccessfulReservationMail($details));
-        Mail::to(env('RESERVATION_MAIL'))->send(new NewReservationMail($details));
+
+        if (Mail::to($email)->send(new SuccessfulReservationMail($details))) {
+        } else {
+            return response()->json(['Status' => 'Failed to send email'], 400);
+        }
+        if (Mail::to(Config::get('values.reservation_mail'))->send(new NewReservationMail($details))) {
+        } else {
+            return response()->json(['Status' => 'Failed to send email'], 400);
+        }
         $email = $confirmedReservation->email;
         return response()->json(['Status' => 'Successfully booked'], 201);
     }
@@ -240,7 +255,7 @@ class ReservationController extends Controller
     {
         $token = $request->token;
         $reservation = Reservation::where(['token' => $token, 'confirmed' => false])->first();
-        if($reservation === null){
+        if ($reservation === null) {
             return response()->json(['Status' => 'You have already confirmed your reservation'], 410);
         }
         $details = [
@@ -253,7 +268,11 @@ class ReservationController extends Controller
             'order_number' => $reservation->order_number,
         ];
         $email = $reservation->email;
-        Mail::to($email)->send(new SendConfirmationMail($details));
+
+        if (Mail::to($email)->send(new SendConfirmationMail($details))) {
+        } else {
+            return response()->json(['Status' => 'Failed to send email'], 400);
+        }
 
         return response()->json(['Status' => 'Verification email sent', 'token' => $token], 201);
     }
@@ -261,7 +280,7 @@ class ReservationController extends Controller
     {
         $token = $request->token;
         $reservation = Reservation::where(['token' => $token, 'confirmed' => true])->first();
-        if($reservation === null){
+        if ($reservation === null) {
             return response()->json(["Status" => "Reservation already canceled"], 410);
         }
         $cancel_key = $request->cancel_key;
@@ -276,8 +295,11 @@ class ReservationController extends Controller
                 'phone_number' => $reservation->phone_number,
                 'order_number' => $reservation->order_number,
             ];
-            Mail::to(env('RESERVATION_MAIL'))->send(new CanceledReservationMail($details));
-            return response()->json(['Status' => 'Successfully canceled'], 201);
+            if (Mail::to(Config::get('values.reservation_mail'))->send(new CanceledReservationMail($details))) {
+                return response()->json(['Status' => 'Successfully canceled'], 201);
+            } else {
+                return response()->json(['Status' => 'Failed to send email'], 400);
+            }
         } else {
             return response()->json(['Status' => 'Invalid key'], 400);
         }

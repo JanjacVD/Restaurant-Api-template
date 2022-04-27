@@ -1,0 +1,53 @@
+<body>
+    <h1>Nova rezervacija</h1>
+    <table>
+        <tr>
+            <td>
+                Broj:
+            </td>
+            <td>
+                {{$details['order_number']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ime:
+            </td>
+            <td>
+                {{$details['name']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Datum:
+            </td>
+            <td>
+                {{$details['reservation_date']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Vrijeme:
+            </td>
+            <td>
+                {{$details['reservation_time']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Broj osoba:
+            </td>
+            <td>
+                {{$details['number_of_people']}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Poruka:
+            </td>
+            <td>
+                {{$details['message']}}
+            </td>
+        </tr>
+    </table>
+</body>

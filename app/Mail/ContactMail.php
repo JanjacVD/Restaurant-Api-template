@@ -31,7 +31,8 @@ class ContactMail extends Mailable
     public function build()
     {
         return $this->subject('Contact')
-        ->from(env('CONTACT_MAIL'), env('APP_NAME'))
+        ->to($this->details['mail_to_email'])
+        ->from($this->details['email'])
         ->view('mail.contact-mail');
     }
 }

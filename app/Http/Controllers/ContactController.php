@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\ContactMail;
+use Illuminate\Support\Facades\Config;
 
 class ContactController extends Controller
 {
-    public function send(Request $request){
+    public function send(Request $request)
+    {
         $validator = Validator::make(
             $request->all(),
             [
@@ -22,16 +24,18 @@ class ContactController extends Controller
         if ($validator->fails()) {
             $errors = $validator->errors();
             return response()->json(['Status' => 'Invalid data', 'Errors' => $errors], 422);
-        } 
+        }
         $details = [
             'name' => $request->name,
             'email' => $request->email,
             'subject' => $request->subject,
             'message' => $request->message,
+            'mail_to_email' => Config::get('values.contact_mail'),
         ];
-
-        Mail::to(env('CONTACT_MAIL'))->send(new ContactMail($details));
-
-        return response()->json(['Status' => 'Email sent'], 202);
+        if (Mail::send(new ContactMail($details))) {
+            return response()->json(['Status' => 'Email sent'], 200);
+        } else {
+            return response()->json(['Status' => 'Error while sending'], 400);
+        }
     }
 }

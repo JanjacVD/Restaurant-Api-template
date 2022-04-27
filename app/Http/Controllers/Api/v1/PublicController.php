@@ -23,7 +23,7 @@ class PublicController extends Controller
             'sectionItems' => $SectionItems,
             'categoryItems' => $CategoryItems,
             'foodItems' => $FoodItems 
-        ]);
+        ], 200);
     }
 
     public function reservations(){
